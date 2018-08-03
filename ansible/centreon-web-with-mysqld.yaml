@@ -47,8 +47,8 @@
         state: latest
 
     - name: php timezone configuration
-      blockinfile:
-        path: /etc/php.d/php-timezone.ini
+      copy:
+        dest: /etc/php.d/php-timezone.ini
         content: |
           date.timezone = Europe/Paris
 
@@ -59,10 +59,10 @@
 
     - name: Enable services necessary to use Centreon
       service:
-        name: "{{ services }}"
+        name: "{{ item }}"
         enabled: yes
         state: started
-      vars:
+      with_items:
         services:
           - httpd
           - snmpd
