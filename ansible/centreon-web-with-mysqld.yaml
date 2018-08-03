@@ -58,29 +58,33 @@
         creates: /var/spool/centreon/.ssh/id_rsa
 
     - name: httpd service
-      service:
-        name: httpd
-        enabled: yes
-        state: started
+      service: name=httpd enabled=yes state=started
     - name: snmpd service
-      service:
-        name: snmpd
-        enabled: yes
-        state: started
+      service: name=snmpd enabled=yes state=started
     - name: mysql service
-      service:
-        name: mysql
-        enabled: yes
-        state: started
+      service: name=mysql enabled=yes state=started
     - name: centcore service
-      service:
-        name: centcore
-        enabled: yes
+      service: name=centcore enabled=yes
     - name: centengine service
-      service:
-        name: centengine
-        enabled: yes
+      service: name=centengine enabled=yes
     - name: cbd service
-      service:
-        name: cbd
-        enabled: yes
+      service: name=cbd enabled=yes
+    - name: Enable firewalld
+      service: name=firewalld state=started enabled=yes
+      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+
+    - name: Firewall allow http
+      firewalld:
+        service: http
+        permanent: true
+        state: enabled
+        immediate: yes
+      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+
+    - name: Firewall allow broker
+      firewalld:
+        port: 5669/tcp
+        permanent: true
+        state: enabled
+        immediate: yes
+      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
