@@ -57,7 +57,7 @@
       args:
         creates: /var/spool/centreon/.ssh/id_rsa
 
-    - name: Enable service centengine and try start
+    - name: Enable services necessary to use Centreon
       service:
         name: "{{ services }}"
         enabled: yes
@@ -67,3 +67,6 @@
           - httpd
           - snmpd
           - mysql
+          - centcore
+          - cbd
+          - centengine
