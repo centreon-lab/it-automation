@@ -1,6 +1,11 @@
 ---
 - hosts: centreon-web
 
+  handlers:
+    - name: reload systemctl
+      shell: systemctl daemon-reload
+      listen: "reload systemctl daemons"
+
   tasks:
     - name: add package necessary to manage selinux (if enabled)
       yum:
@@ -47,10 +52,22 @@
         state: latest
 
     - name: php timezone configuration
-      copy:
-        dest: /etc/php.d/php-timezone.ini
+      blockinfile:
+        create: yes
+        path: /etc/php.d/php-timezone.ini
         content: |
           date.timezone = Europe/Paris
+
+    - name: Add LimitNOFILE=32000 systemd
+      blockinfile:
+        create: yes
+        path: /etc/systemd/system/mariadb.service.d/limits.conf
+        content: |
+          [Service]
+          LimitNOFILE=32000
+      notify: "reload systemctl daemons"
+      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+
 
     - name: Generate SSH keys
       shell: su - centreon -c 'ssh-keygen -t rsa -f /var/spool/centreon/.ssh/id_rsa -q -N ""'
