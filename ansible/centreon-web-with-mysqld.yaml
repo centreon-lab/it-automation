@@ -69,7 +69,7 @@
         state: started
     - name: mysql service
       service:
-        name: mysqld
+        name: mysql
         enabled: yes
         state: started
     - name: centcore service
