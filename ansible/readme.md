@@ -27,15 +27,29 @@ Tasks:
 * Enable and try start centengine service
 
 ```
-ansible-playbook centreon-poller.yaml
+ansible-playbook -i hosts centreon-poller.yaml
 ```
 
 
 Centreon Web Playbook
 --------------------
 
+Compatible:
+
+* CentOS 6
+* CentOS 7
+
+Tasks:
+
+* Disable selinux
+* Add Centreon Open Source repository
+* Import keys from repository
+* Install packages to Centreon poller
+* Set authorized previously created keys
+
+
 ```
-ansible-playbook centreon-poller.yaml
+ansible-playbook -i hosts centreon-web-with-mysqld.yaml
 ```
 
 Example
